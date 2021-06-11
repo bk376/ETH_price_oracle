@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./CallerContractInterface.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EthPriceOracle is Ownable {
     uint256 private randNonce = 0;
@@ -22,5 +22,21 @@ contract EthPriceOracle is Ownable {
         pendingRequests[id] = true;
         emit GetLatestEthPriceEvent(msg.sender, id);
         return id;
+    }
+
+    function setLatestEthPrice(
+        uint256 _ethPrice,
+        address _callerAddress,
+        uint256 _id
+    ) public onlyOwner {
+        require(
+            pendingRequests[_id],
+            "This request is not in my pending list."
+        );
+        delete pendingRequests[_id];
+        CallerContractInterface callerContractInstance;
+        callerContractInstance = CallerContractInterface(_callerAddress);
+        callerContractInstance.callback(_ethPrice, _id);
+        emit SetLatestEthPriceEvent(_ethPrice, _callerAddress);
     }
 }
