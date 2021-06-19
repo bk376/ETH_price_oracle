@@ -1,3 +1,15 @@
 node_modules
 .env
 build
+
+oracle/node_modules
+oracle/.env
+oracle/build
+oracle/oracle_private_key
+oracle/node_modules copy/
+
+
+caller/node_modules
+caller/.env
+caller/build
+caller/caller_private_key
